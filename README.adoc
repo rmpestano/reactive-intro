@@ -1,0 +1,21 @@
+== Intro to reactive programing
+
+image:https://github.com/rmpestano/reactive-intro/actions/workflows/ci.yml/badge.svg[Build Status,link=https://github.com/rmpestano/reactive-intro/actions/workflows/ci.yml]
+
+Sample code used for reactive intro presentation.
+
+== Running the application
+
+. `docker-compose up` in the parent module
+. Run `mvn spring-boot:run` on *webflux* or *webmvc* modules
++
+> or run `webflux app (com.example.reactive.WebFluxApplication)` or `webmvc app (com.example.reactive.WebMvcApplication)`
+. `curl -X GET http://localhost:8080/api/persons/`
+
+=== Resources
+
+* https://www.amitph.com/introduction-spring-webflux-reactive-api/
+* https://docs.spring.io/spring-framework/docs/current/reference/html/web-reactive.html
+* https://projectreactor.io/docs/core/release/reference/
+* https://www.baeldung.com/spring-webflux-concurrency
+* https://www.baeldung.com/reactive-streams-step-verifier-test-publisher

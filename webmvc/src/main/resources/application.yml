@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: webmvc
+  elasticsearch:
+    uris: http://localhost:19200

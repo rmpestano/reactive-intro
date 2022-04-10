@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+
+  els-with-cors:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.12.1
+    environment:
+      ELASTIC_PASSWORD: root
+      ES_JAVA_OPTS: -Xmx2g
+    volumes:
+      - type: bind
+        source: ./elasticsearch.yml
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        read_only: true
+    ports:
+      - "127.0.0.1:19200:9200"
+
+  dejavu:
+    image: appbaseio/dejavu:3.6.0
+    container_name: dejavu
+    ports:
+      - '9100:1358'
+    links:
+      - els-with-cors
