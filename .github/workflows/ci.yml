@@ -1,4 +1,4 @@
-name: rest api contracts build
+name: Reactive intro build
 
 on:
   push:
