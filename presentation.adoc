@@ -10,9 +10,9 @@
 
 * WebMVC vs WebFlux "performance tests"
 +
-image:img/webflux-threads.png[Webflux,300,300]
+image:img/webflux-threads.png[]
 +
-image:img/webmvc-threads.png[Webmvc,300,300]
+image:img/webmvc-threads.png[]
 
 === Resources
 
