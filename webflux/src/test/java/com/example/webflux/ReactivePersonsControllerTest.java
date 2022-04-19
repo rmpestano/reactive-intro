@@ -14,6 +14,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.BaseSubscriber;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
+
+import java.time.Duration;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -83,40 +86,32 @@ class ReactivePersonsControllerTest {
 
 
                 });
-        /*client.get()
-                .uri("api/persons")
-                .retrieve().bodyToFlux(Person.class)
-                .limitRate(1)
-                .subscribe(new Subscriber<Person>() {
+    }
 
-                    int count = 0;
-
-                    @Override
-                    public void onSubscribe(Subscription subscription) {
-                        if (count >= 2) {
-                            count = 0;
-                            subscription.request(2);
-                        }
-                    }
-
-                    @Override
-                    public void onNext(Person person) {
-                        count++;
-                        System.out.println(person);
-
-                    }
-
-                    @Override
-                    public void onError(Throwable throwable) {
-
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-                });*/
-
+    @Test
+    void shouldGetPersonWithWindow() {
+        given(personRepository.findAll())
+                .willReturn(Flux.just(new Person("1", "p1"),
+                        new Person("2", "p2"),
+                        new Person("3", "p3"),
+                        new Person("4", "p4"),
+                        new Person("5", "p5"),
+                        new Person("6", "p6"),
+                        new Person("7", "p7"),
+                        new Person("8", "p8"),
+                        new Person("9", "p9"),
+                        new Person("10", "p10")
+                ));
+        webClient.get()
+                .uri("/api/persons")
+                .accept(MediaType.TEXT_EVENT_STREAM)
+                .exchange().returnResult(Person.class)
+                .getResponseBody()
+                .window(2)
+                .zipWith(Flux.interval(Duration.ZERO, Duration.ofSeconds(1)))
+                .flatMap(Tuple2::getT1)
+                .log()
+                .subscribe(System.out::println);
     }
 
 }

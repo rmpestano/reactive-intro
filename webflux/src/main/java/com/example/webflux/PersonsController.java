@@ -3,18 +3,19 @@ package com.example.webflux;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.util.function.Tuple2;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
 import static java.time.LocalDateTime.now;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.TEXT_EVENT_STREAM_VALUE;
 
 @Slf4j
 @RestController
@@ -44,13 +45,23 @@ class PersonsController {
                 .map(ResponseEntity::ok);
     }
 
-    @GetMapping(value = "delay", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "delay", produces = TEXT_EVENT_STREAM_VALUE)
     public Flux<Person> getPersonsDelayed() {
         return personRepository.findAll()
-                .delayElements(Duration.ofSeconds(2));
+                .delayElements(Duration.ofMillis(500))
+                .log();
     }
 
-    @GetMapping(value = "events", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "window", produces = TEXT_EVENT_STREAM_VALUE)
+    public Flux<Person> getPersonLimitRate() {
+        return personRepository.findAll()
+                .window(2)
+                .zipWith(Flux.interval(Duration.ZERO, Duration.ofSeconds(1)))
+                .flatMap(Tuple2::getT1)
+                .log();
+    }
+
+    @GetMapping(value = "events", produces = TEXT_EVENT_STREAM_VALUE)
     public Flux<PersonEvent> getPersonEvents() {
         return personRepository.findAll()
                 .zipWith(Flux.interval(Duration.ofSeconds(2)))

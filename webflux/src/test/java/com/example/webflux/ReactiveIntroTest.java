@@ -140,7 +140,7 @@ class ReactiveIntroTest {
     void fluxFilter() {
         Flux<String> source = Flux.just("John", "Monica", "Mark", "Cloe", "Frank", "Casper", "Olivia", "Emily", "Cate")
                 .filter(name -> name.length() == 4)
-                .map(String::toUpperCase);
+                .map(String::toUpperCase).log();
         StepVerifier
                 .create(source)
                 .expectNext("JOHN")
@@ -173,4 +173,18 @@ class ReactiveIntroTest {
                 .verifyComplete();
 
     }
+
+    @Test
+    void fluxTake() {
+        Flux<String> source = Flux.just("John", "Monica", "Mark", "Cloe", "Frank", "Casper", "Olivia", "Emily", "Cate")
+                .take(2)
+                .log();
+
+        StepVerifier
+                .create(source)
+                .expectNext("John", "Monica")
+                .expectComplete()
+                .verify();
+    }
+
 }
