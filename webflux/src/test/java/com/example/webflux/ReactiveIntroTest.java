@@ -22,7 +22,11 @@ class ReactiveIntroTest {
     void nothingHappens() {
         Mono.just("data")
                 .log()
-                .map(data -> data.toUpperCase());
+                .map(data -> data.toUpperCase())
+                .map(data -> {
+                    System.out.println(data);
+                    return data;
+                });
     }
 
     @Test
@@ -33,7 +37,6 @@ class ReactiveIntroTest {
                 .map(data -> data.toUpperCase())
                 .subscribe(result -> {
                     dataResult.set(result);
-                    assertThat(result).isEqualTo("will throw ex in reactor thread");
                 });
 
         assertThat(dataResult.get()).isEqualTo("DATA");
@@ -53,7 +56,7 @@ class ReactiveIntroTest {
         Mono error = Mono.just("data")
                 .map(data -> {
                     int a = 1 / 0;
-                    return data;
+                    return a;
                 }).log();
 
         StepVerifier.create(error)
@@ -171,7 +174,6 @@ class ReactiveIntroTest {
                 .create(source)
                 .expectNext("SUREPAY")
                 .verifyComplete();
-
     }
 
     @Test

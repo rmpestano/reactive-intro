@@ -4,11 +4,15 @@
 
 * Reactive intro
 
-* Mono vs Flux basic operators
+* Mono vs Flux basic and operators
 
 * Person API overview
 
 * WebMVC vs WebFlux "performance tests"
++
+image:img/webflux-threads.png[Webflux,300,300]
++
+image:img/webmvc-threads.png[Webmvc,300,300]
 
 === Resources
 
